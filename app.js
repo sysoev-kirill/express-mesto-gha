@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(ERROR_DEFAULT).send({ message: 'Что-то пошло не так...ошибка' });
+  res.status(ERROR_DEFAULT).send({ message: 'На сервере произошла ошибка' });
 });
 
 app.listen(3000, () => {

@@ -8,7 +8,7 @@ const {
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" }));
+    .catch((err) => res.status(ERROR_DEFAULT).send({ message: "На сервере произошла ошибка" }));
 };
 
 const createCard = (req, res) => {
@@ -21,7 +21,7 @@ const createCard = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(ERROR_CODE).send({ message: "Введены некорректные данные" });
       } else {
-        return res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+        return res.status(ERROR_DEFAULT).send({ message: "На сервере произошла ошибка" });
       }
     });
 };
