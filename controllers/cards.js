@@ -31,14 +31,15 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCardById = (req, res, next) => {
-  Card.findByIdAndDelete(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка с указанным _id не найдена');
-      } else if (card.owner.toString() !== req.user._id) {
-        throw new ForbiddenError('Вы не можете удалить карточку другого пользователя');
+      } else if (card.owner.toString() === req.user._id) {
+        Card.findByIdAndRemove(req.params.cardId)
+          .then(()=> res.send(card))
       } else {
-        res.send({ data: card });
+        throw new ForbiddenError('Вы не можете удалить карточку другого пользователя');
       }
     })
     .catch((err) => {

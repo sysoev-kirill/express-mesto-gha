@@ -15,36 +15,23 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, 10, (err, hash) => User.findOne({ email })
-    .then((user) => {
-      if (user) {
-        throw new ConflictError('Пользователь с таким Email уже существует');
-      }
-      User.create({
-        name,
-        about,
-        avatar,
-        email,
-        password: hash,
-      })
-        .then((newUser) => {
-          res.status(201).send({
-            email: newUser.email,
-            name: newUser.name,
-            about: newUser.about,
-            avatar: newUser.avatar,
-            _id: newUser._id,
-          });
-        });
-      // eslint-disable-next-line no-shadow
-    })
-    .catch((error) => {
-      if (error.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные'));
+
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
+    .then((user) => res.status(201).send({
+      _id: user._id, name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+    }))
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже существует'));
+      } else if (err.name === 'ValidationError') {
+        next(new ValidationError('Введены некорректные данные'));
       } else {
-        next(error);
+        next(err);
       }
-    }));
+    });
 };
 
 

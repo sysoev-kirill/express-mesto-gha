@@ -9,7 +9,7 @@ const {
   getInfoAboutMe,
 } = require('../controllers/users');
 
-const regexUrl = /^(http:\/\/|https:\/\/w*\w)/;
+const regexUrl = /https?:\/\/(www\.)?[-\w@:%.+~#=]{1,256}\.[a-z0-9()]{1,6}\b([-\w()@:%.+~#=/?&]*)/i;
 
 router.get('/users', getUsers);
 router.get('/users/me', celebrate({
